@@ -11,7 +11,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 import streamlit as st
 import pandas as pd
 
@@ -91,12 +91,26 @@ model.fit(X_train, y_train)
 
 # Step 4: Test
 prediction = model.predict(X_test)
+
+# Calculate Accuracy
 accuracy = accuracy_score(y_test, prediction)
+
+# Calculate Precision, Recall, and F1-Score
+precision = precision_score(y_test, prediction, average='weighted')
+recall = recall_score(y_test, prediction, average='weighted')
+f1 = f1_score(y_test, prediction, average='weighted')
+
+# Confusion Matrix
+conf_matrix = confusion_matrix(y_test, prediction)
 
 # Amélioration 5: Comparer les métriques et la "accuracy" et expliquer comment on va la calculer.
 st.sidebar.header('Model Evaluation Metrics')
 st.sidebar.text(f'Accuracy: {accuracy:.2f}')
-st.sidebar.text(classification_report(y_test, prediction))
+st.sidebar.text(f'Precision: {precision:.2f}')
+st.sidebar.text(f'Recall: {recall:.2f}')
+st.sidebar.text(f'F1-Score: {f1:.2f}')
+st.sidebar.text('Confusion Matrix:')
+st.sidebar.text(str(conf_matrix))
 
 # Web Deployment of the Model: streamlit run filename.py
 st.sidebar.write('Selected algorithm for training:', selected_model)
